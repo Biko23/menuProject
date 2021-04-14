@@ -54,36 +54,70 @@ const menu = [
         price: 8500,
         img: "../../../Downloads/remedies.jpg",
         description: "A whole bunch of sugary sweetness guaranteed to make you go oooooohhhh weeee. glazed with a whole lotta love and dramatic spice ;)"
+    },
+    {
+        id: 8,
+        title: "Steak dinner",
+        Category: "Dinner",
+        price: 8500,
+        img: "../../../Downloads/remedies.jpg",
+        description: "A whole bunch of sugary sweetness guaranteed to make you go oooooohhhh weeee. glazed with a whole lotta love and dramatic spice ;)"
     }
 ];
 
 const sectionCenter = document.querySelector('.section-center');
-const filterBtns = document.querySelectorAll('.filter-btn');
-
+const buttonContainer = document.querySelector('.btn-container');
 window.addEventListener('DOMContentLoaded', function(){
     displayMenuItems(menu);
-});
-
-
-filterBtns.forEach(function(btn){
-    btn.addEventListener('click', function(e){
-        const category = e.currentTarget.dataset.category;
-
-        const menuCategory = menu.filter(function(menuItem) {
-            if(menuItem.Category === category){
-                return menuItem;
+    // displayButtons(buttons);
+    const cats = menu.reduce(
+        function(values, cat){
+            if (!values.includes(cat.Category)) {
+                values.push(cat.Category);
             }
-        });
+            return values
 
-        if(category === 'All'){
-            displayMenuItems(menu);
-        }
-        else{
-            displayMenuItems(menuCategory);
-        }
-        // console.log(menuCategory);
+    },['All']
+    );
+    const displayButtons = cats.map(function(db){
+        return (
+            `
+            <button class="filter-btn" type="button" data-category=${db}>
+            ${db}
+            </button>`
+        );
+
+    }).join("");
+    buttonContainer.innerHTML = displayButtons;
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(function(btn){
+        btn.addEventListener('click', function(e){
+            const category = e.currentTarget.dataset.category;
+    
+            const menuCategory = menu.filter(function(menuItem) {
+                if(menuItem.Category === category){
+                    return menuItem;
+                }
+            });
+    
+            if(category === 'All'){
+                displayMenuItems(menu);
+            }
+            else{
+                displayMenuItems(menuCategory);
+            }
+            // console.log(menuCategory);
+        })
     })
-})
+    
+
+    });
+    // let displayButtons = bt.join("");
+    // filterBtns.innerHTML = displayButtons;
+//     console.log(cat);
+// });
+
 
 function displayMenuItems(menuItems){
     // console.log("shake and bake")
