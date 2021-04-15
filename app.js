@@ -69,54 +69,57 @@ const sectionCenter = document.querySelector('.section-center');
 const buttonContainer = document.querySelector('.btn-container');
 window.addEventListener('DOMContentLoaded', function(){
     displayMenuItems(menu);
-    // displayButtons(buttons);
-    const cats = menu.reduce(
-        function(values, cat){
-            if (!values.includes(cat.Category)) {
-                values.push(cat.Category);
+    createButtons();
+});
+
+
+function createButtons(){
+    // filter out unique categories
+    const buttonNames = menu.reduce(
+        function(values, buttonName){
+            // Incase of a new category add it to the values of categories and return the array
+            if(!values.includes(buttonName.Category)) {
+                values.push(buttonName.Category);
             }
-            return values
+            return values;
+            // console.log(values);
+        }, ['all']);
+        // console.log(buttonNames);
+        
+        
+        //  To display the buttons map through the return array of buttonNames
+        //  and return an HTML button tag with a dataset with the value of each category.
+        const displayButtons = buttonNames.map(function(displayButton) {
+            return (
+                `
+                <button class="filter-btn" type="button" data-category=${displayButton}>
+                ${displayButton}
+                </button>`
+            );
 
-    },['All']
-    );
-    const displayButtons = cats.map(function(db){
-        return (
-            `
-            <button class="filter-btn" type="button" data-category=${db}>
-            ${db}
-            </button>`
-        );
+        }).join("");
+        buttonContainer.innerHTML = displayButtons;
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(function(filterBtn) {
+            filterBtn.addEventListener('click', function(e){
+                const category = e.currentTarget.dataset.category;
+                // console.log(e.currentTarget.dataset.category);
 
-    }).join("");
-    buttonContainer.innerHTML = displayButtons;
-
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(function(btn){
-        btn.addEventListener('click', function(e){
-            const category = e.currentTarget.dataset.category;
-    
-            const menuCategory = menu.filter(function(menuItem) {
-                if(menuItem.Category === category){
-                    return menuItem;
+                const menuCategory = menu.filter(function(menuItem) {
+                    if (menuItem.Category === category) {
+                        return menuItem;
+                    }
+                });
+                if (category === 'All') {
+                    displayMenuItems(menu);
                 }
-            });
-    
-            if(category === 'All'){
-                displayMenuItems(menu);
-            }
-            else{
-                displayMenuItems(menuCategory);
-            }
-            // console.log(menuCategory);
-        })
-    })
-    
+                else {
+                    displayMenuItems(menuCategory);
+                }
 
-    });
-    // let displayButtons = bt.join("");
-    // filterBtns.innerHTML = displayButtons;
-//     console.log(cat);
-// });
+            });
+        });
+}
 
 
 function displayMenuItems(menuItems){
